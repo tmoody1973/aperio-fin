@@ -1,49 +1,104 @@
 import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './hooks/useAuth';
+import { AudioPlayerProvider } from './components/PersistentAudioPlayer';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Articles from './pages/Articles';
+import ArticleView from './pages/ArticleView';
+import CreateArticle from './pages/CreateArticle';
+import MarketDashboard from './pages/MarketDashboard';
+import ContentGeneration from './components/ContentGeneration';
+import FinancialCharts from './components/FinancialCharts';
+import EnhancedArticleGenerator from './components/EnhancedArticleGenerator';
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-      <div className="max-w-md w-full mx-auto text-center p-8">
-        {/* Logo/Icon Placeholder */}
-        <div className="mb-8">
-          <div className="text-4xl mb-4">📊 📈 📰</div>
-          <h1 className="text-3xl font-bold text-aperio-blue font-serif">
-            Aperio.fin
-          </h1>
-          <p className="text-lg text-gray-600 mt-2">
-            AI-Powered Financial Journalism
-          </p>
-        </div>
+    <AuthProvider>
+      <AudioPlayerProvider>
+        <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-        {/* Welcome Message */}
-        <div className="mb-8">
-          <p className="text-gray-700 text-center leading-relaxed">
-            Transform raw market data into compelling stories you'll actually understand
-          </p>
-        </div>
+          {/* Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/articles"
+            element={
+              <ProtectedRoute>
+                <Articles />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/articles/:slug"
+            element={
+              <ProtectedRoute>
+                <ArticleView />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-article"
+            element={
+              <ProtectedRoute>
+                <CreateArticle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/market"
+            element={
+              <ProtectedRoute>
+                <MarketDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/generate"
+            element={
+              <ProtectedRoute>
+                <ContentGeneration />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/charts"
+            element={
+              <ProtectedRoute>
+                <FinancialCharts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/write"
+            element={
+              <ProtectedRoute>
+                <EnhancedArticleGenerator />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Coming Soon Button */}
-        <div className="space-y-4">
-          <button className="w-full bg-aperio-blue text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
-            Coming Soon
-          </button>
+          {/* Default Route - redirect to dashboard if authenticated, otherwise login */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          <p className="text-sm text-gray-500">
-            We're building the future of financial journalism
-          </p>
-        </div>
-
-        {/* Development Status */}
-        <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 text-sm font-medium">
-            🚀 Development Status: Day 1 Complete!
-          </p>
-          <p className="text-green-600 text-xs mt-1">
-            React + Tailwind CSS + Project Structure ✅
-          </p>
-        </div>
-      </div>
-    </div>
+          {/* Catch all route - redirect to dashboard */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+        </Router>
+      </AudioPlayerProvider>
+    </AuthProvider>
   );
 }
 
